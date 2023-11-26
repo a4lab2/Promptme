@@ -6,7 +6,7 @@ export const connectToDB=async()=>{
 mongoose.set('strictQuery',true)
 
 if(isConnected){
-    console.log('Mongo is connected')
+    console.log('Mongo is already connected')
     return;
 }
 
@@ -17,7 +17,7 @@ try {
         useUnifiedTopology:true,
     })
     isConnected=true
-    console.log("mongo Connected")
+    console.log("Mongo Connected")
 } catch (error) {
     console.log(error)
 }

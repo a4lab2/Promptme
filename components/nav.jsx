@@ -3,34 +3,48 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react'
-import { use } from "bcrypt/promises"
+// import { use } from "bcrypt/promises"
 
 const Nav = () => {
-    const isUserloggedIn=true
-    const [providers, setProviders] = useState(null);
-    const [toggleDropdown, settoggleDropdown] = useState(false);
-    useEffect(() => {
-        const setProviders=async()=>{
-            const response=await getProviders();
-            setProviders(response)
-        }
-        setProviders()
+    // const isUserloggedIn=true
+// const {data:session} = useSession();
+
+//     const [providers, setProviders] = useState(null);
+//     const [toggleDropdown, settoggleDropdown] = useState(false);
+//     useEffect(() => {
+//         const setUpProviders=async()=>{
+//             const response=await getProviders();
+//             setProviders(response)
+//         }
+//         setUpProviders()
         
-    }, []);
+//     }, []);
+
+const { data: session } = useSession();
+
+  const [providers, setProviders] = useState(null);
+  const [toggleDropdown, settoggleDropdown] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
     return (
         <nav className="flex-between w-full mb-16 pt-3">
             <Link href="/" className="flex gap-2 flex-center">
             <Image src="/assets/images/logo.svg" alt="" width={30} height={30} className="object-contain"/>
             <p className="logo-text">Promptopia</p>
             </Link>
-
+{/* desktop */}
             <div className="sm:flex hidden">
-                {isUserloggedIn?(
+                {session?.user?(
                     <div className="flex gap-3 md:gap-5">
                         <Link href="/create-prompt" className="black_btn">Create Post</Link>
                         <button type="button" onClick={signOut} className="outline_btn">Sign Out</button>
                         <Link href="/profile">
-                            <Image src="/assets/images/logo.svg" width={37} height={37} className="rounded-full" alt="profile"/>
+                            <Image src={session?.user.image} width={37} height={37} className="rounded-full" alt="profile"/>
                         </Link>
                     </div>
                 ):(
@@ -49,10 +63,10 @@ const Nav = () => {
             </div>
             {/* mobile */}
             <div className="sm:hidden flex relative">
-                {isUserloggedIn?(
+                {session?.user?(
 
                     <div className="flex">
-                        <Image src="/assets/images/logo.svg" width={37} height={37} className="rounded-full" alt="profile" onClick={()=>settoggleDropdown((prev)=>
+                        <Image src={session?.user.image} width={37} height={37} className="rounded-full" alt="profile" onClick={()=>settoggleDropdown((prev)=>
                             !prev
                             )}/>
 
